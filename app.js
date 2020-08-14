@@ -6,7 +6,12 @@ const express = require("express"),
      LocalStrategy = require("passport-local"),
      passportLocalMongoose = require("passport-local-mongoose");
 
-mongoose.connect("mongodb://localhost/auth_app");
+const dburi = process.env.MONGO || "mongodb://localhost/auth_app";
+
+mongoose.connect(dburi, {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+});
 
 
 var app = express();
@@ -16,7 +21,11 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(require("express-session")({
     secret: "bilieve in your self",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie:{
+        httpOnly: true
+    }
+    
 }));
 
 app.use(passport.initialize());
@@ -83,6 +92,8 @@ function isLoggedIn(req,res,next){
     }
     res.redirect("/login");
 }
+
+
  
 app.listen(process.env.PORT || 8080, ()=>{
     console.log("Running");
