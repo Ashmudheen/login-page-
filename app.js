@@ -7,6 +7,7 @@ const express = require("express"),
      passportLocalMongoose = require("passport-local-mongoose");
 
 const dburi = process.env.MONGO || "mongodb://localhost/auth_app";
+const sessionSecret = process.env.SESSION_SECRET || "believe in yourself";
 
 mongoose.connect(dburi, {
     useNewUrlParser: true, 
@@ -19,7 +20,7 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(require("express-session")({
-    secret: "bilieve in your self",
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     cookie:{
